@@ -1,132 +1,238 @@
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="loader.css">
-<style>
-    * { overflow-x: hidden;}
-    .hidden { display: none; }
-    p { font-weight: 300; font-size: 16px; margin: 10px 20px;}
-    #loader { justify-content: center; overflow: hidden; }
-    .header > img { width: 40px; height: 40px; }
-    .top-body > img { width: 90%; max-height: 200px; border-radius: 12px; margin: 0 0 10px 0; }
-    .customer-text { display: flex; align-items: center; gap: 10px; margin: 10px; }
-	.customer-text h3 { margin: 0px; }
-	.customer-text hr { flex-grow: 1; border: none; border-top: 2px solid #fff; }
-    .top-body { display: flex; flex-direction: column-reverse; align-items: center; justify-content: center; margin: 20px 0 0 0; }
-    .stats > p { display: flex; flex-direction: column; align-items: center; gap: 10px; justify-content: center; }
-    .stats { display: flex; justify-content: space-around; border: 4px solid #022953; margin: 10px; }
-    .stats > p > span { font-size: 20px; font-weight: 500; }
-    .image-box > img { width: 50px; height: 50px; border-radius: 125px; }
-    .image-box { margin: 10px; border: 4px solid #022953; border-radius: 125px; display: flex; justify-content: space-between; padding: 10px;}
-    .next-btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: #000; }
-    .phone { display: flex; align-items: center; justify-content: center; }
-    .screen { box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 15px 25px; background: #eee; border-radius: 12px; width: 65%; }
-    .image-container > img { border-radius: 8px; width: 100%; max-height: 400px; }
-    .image-container { width: 100%; box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 20px; }
-    .download-btn { display: flex; justify-content: center; margin: 10px; }
-    .download-btn > a { width: 100%; color: #fff; font-weight: 500; text-align: center; background: #17596f; border: none; padding: 10px; border-radius: 125px; text-transform: uppercase;}
-</style>
-
-<div id="loader">
-    <div class="loader"></div>
-</div>
-<div id="data-container" class="hidden"></div>
-
-<script>
-    const deployURL = "https://script.google.com/macros/s/AKfycbwV1N7G9m_clabKdzph4gFCQqxnm2sEBNgaYNHcquJqc5H0EQ1oXvM4T-yv-PVd-Dg2xw/exec";
-
-    async function fetchData() {
-        try {
-            document.getElementById("loader").style.display = "flex";
-            const response = await fetch(deployURL);
-            const { webData, userStats } = await response.json();
-
-            if (webData.length < 2) return;
-
-            let row = webData[1];
-            let html = `
-            <div class='card'>
-                <div class="header">
-                    <img src='${row[1]}'>
-                    <h2>${row[0]}</h2>
-                </div>
-                <div class="top-body">
-                <p>${row[2]}</p>
-                <img src='${row[3]}'>
-                </div>
-                <div class="download-btn">
-                    <a href="rkmrohitbhai.apk" download>Download</a>
-                </div>
-                <div class="customer-text"><h3>About</h3><hr></div>
-                <p>${row[4]}</p>
-                <div class="customer-text"><h3>Screen Shot</h3><hr></div>
-                <div class="phone">
-                    <div class="screen">
-                        <div class='image-container' id='f-images'></div>
-                        <button onclick="nextImage()" class="next-btn"></button>
-                        </div>
-                        </div>
-                <div class="customer-text"><h3>Terms & Conditions</h3><hr></div>
-                <p>${row[6]}</p>
-                <div class="customer-text"><h3>Performance</h3><hr></div>
-                <div id="stats-container" class="stats">
-                    <p>Downloads<span id="countA">${userStats.countA}+</span></p>
-                    <p>Rewards<span id="sumG">₹${userStats.sumG}</span></p>
-                    <p>Reffered<span id="sumH">${userStats.sumH}</span></p>
-                </div>
-                <div class="customer-text"><h3>Customer Support</h3><hr></div>
-                <p>${row[7]}</p>
-                <div class="customer-text"><h3>Social</h3><hr></div>
-                <div class='image-box' id='i-images'></div>
-            </div>`;
-
-            document.getElementById("data-container").innerHTML = html;
-            handleMultipleImages("f-images", row[5]);
-            displayAllImages("i-images", row[8], row[9]);
-
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("data-container").classList.remove("hidden");
-        } catch (error) {
-            console.error("Error fetching data", error);
-            document.getElementById("loader").style.display = "none";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Suspended</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #031d38;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-    }
-
-    let currentImageIndex = 0;
-    let fImagesArray = [];
-
-    function handleMultipleImages(containerId, images) {
-        fImagesArray = images.split(",");
-        let container = document.getElementById(containerId);
-        if (fImagesArray.length > 0) {
-            let imgElement = document.createElement("img");
-            imgElement.src = fImagesArray[currentImageIndex];
-            imgElement.id = "f-image";
-            container.appendChild(imgElement);
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            backdrop-filter: blur(5px);
         }
-    }
-
-    function nextImage() {
-        if (fImagesArray.length > 0) {
-            currentImageIndex = (currentImageIndex + 1) % fImagesArray.length;
-            document.getElementById("f-image").src = fImagesArray[currentImageIndex];
+        h1 {
+            color: #ff5555;
+            font-size: 28px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 15px;
         }
-    }
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        .highlight {
+            color: #66ccff;
+            font-weight: bold;
+        }
+        .payment-info {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        .qr-container {
+            margin: 25px 0;
+            position: relative;
+        }
+        .qr-code {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 15px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .qr-code:hover {
+            transform: scale(1.05);
+        }
+        .qr-code img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+        .upi-id {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .upi-id:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #66ccff;
+            margin: 15px 0;
+            animation: pulse 2s infinite;
+        }
+        .instructions {
+            background-color: rgba(102, 204, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+            text-align: left;
+        }
+        .instructions ol {
+            margin-left: 20px;
+            padding-left: 0;
+        }
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .copy-message {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(102, 204, 255, 0.8);
+            color: #ffffff;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .copy-message.show {
+            opacity: 1;
+        }
+        .timer-container {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .countdown {
+            font-weight: bold;
+            color: #ff5555;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Account Suspended</h1>
+        
+        <p>Your access to this application has been <span class="highlight">temporarily suspended</span> due to a pending payment issue.</p>
+        
+        <div class="payment-info">
+            <p>To restore your access immediately, please complete the pending payment:</p>
+            <div class="amount">₹499.00</div>
+            
+            <div class="qr-container">
+                <div class="copy-message" id="copyMessage">UPI ID copied to clipboard!</div>
+                <div class="qr-code">
+                    <!-- Using a QR code generated for the UPI ID -->
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=createprincemahto-2@okaxis%26pn=Prince%26am=499%26cu=INR" alt="Payment QR Code" id="qrCode" />
+                </div>
+                <p>Scan the QR code above or use the UPI ID below:</p>
+                <div class="upi-id" id="upiId" onclick="copyUpiId()">createprincemahto-2@okaxis</div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <p><strong>After payment:</strong></p>
+            <ol>
+                <li>Take a screenshot of your payment confirmation</li>
+                <li>Send the screenshot to our WhatsApp support</li>
+                <li>Your access will be restored within 1-2 hours</li>
+            </ol>
+        </div>
+        
+        <div class="timer-container">
+            <p>Your session will expire in <span class="countdown" id="countdown">30:00</span></p>
+        </div>
+        
+        <div class="footer">
+            <p>If you believe this suspension is in error or need assistance, please contact our support team.</p>
+        </div>
+    </div>
 
-    function displayAllImages(containerId, images, links) {
-        let imagesArray = images.split(",");
-        let linksArray = links.split(",");
-        let container = document.getElementById(containerId);
+    <script>
+        // Copy UPI ID functionality
+        function copyUpiId() {
+            const upiId = "createprincemahto-2@okaxis";
+            navigator.clipboard.writeText(upiId).then(function() {
+                showCopyMessage();
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
 
-        imagesArray.forEach((src, index) => {
-            let imgElement = document.createElement("img");
-            imgElement.src = src;
-            imgElement.onclick = () => {
-                window.location.href = linksArray[index];
-            };
-            container.appendChild(imgElement);
+        function showCopyMessage() {
+            const copyMessage = document.getElementById('copyMessage');
+            copyMessage.classList.add('show');
+            setTimeout(function() {
+                copyMessage.classList.remove('show');
+            }, 2000);
+        }
+
+        // Countdown timer functionality
+        function startCountdown() {
+            let minutes = 30;
+            let seconds = 0;
+            
+            const countdownElement = document.getElementById('countdown');
+            
+            const countdownInterval = setInterval(function() {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(countdownInterval);
+                        countdownElement.textContent = "EXPIRED";
+                        return;
+                    }
+                    minutes--;
+                    seconds = 59;
+                } else {
+                    seconds--;
+                }
+                
+                const minutesDisplay = minutes < 10 ? '0' + minutes : minutes;
+                const secondsDisplay = seconds < 10 ? '0' + seconds : seconds;
+                
+                countdownElement.textContent = minutesDisplay + ':' + secondsDisplay;
+            }, 1000);
+        }
+
+        // Initialize QR code zoom effect
+        document.getElementById('qrCode').addEventListener('click', function() {
+            window.open(this.src, '_blank');
         });
-    }
 
-    fetchData();
-</script>
+        // Start the countdown when the page loads
+        window.onload = function() {
+            startCountdown();
+        };
+    </script>
+</body>
+</html>
